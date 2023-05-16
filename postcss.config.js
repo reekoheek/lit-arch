@@ -1,5 +1,4 @@
-module.exports = {
-  // parser: 'sugarss',
+export default {
   plugins: {
     'postcss-import': {},
     'postcss-url': {},

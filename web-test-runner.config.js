@@ -1,6 +1,6 @@
-const { esbuildPlugin } = require('@web/dev-server-esbuild');
+import { esbuildPlugin } from '@web/dev-server-esbuild';
 
-module.exports = {
+export default {
   files: [
     './src/**/*.test.ts',
   ],

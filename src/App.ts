@@ -1,22 +1,43 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { ref, createRef } from 'lit/directives/ref.js';
 import { Router, component } from '@xlit/router';
-import { container } from './container';
+import { container, injected } from './container.js';
+import { commonStyles } from './styles.js';
+import { AuthService } from './auth/AuthService.js';
+
+import './app.css';
 
 @customElement('x-app')
 @container.injectable()
 export class App extends LitElement {
+  static styles = [
+    commonStyles,
+  ];
+
   @container.injectProvide()
   router!: Router;
 
-  outletRef: ReturnType<typeof createRef<HTMLElement>> = createRef();
+  @container.injectLookup()
+  authService!: AuthService;
 
   protected async firstUpdated() {
-    const outlet = this.outletRef.value ?? this;
-    this.router = new Router(outlet)
-      .route('/', component('x-home', () => import('./pages/Home')))
-      .route('/login', component('x-login', () => import('./pages/Login')))
+    await injected(this);
+
+    this.router = new Router(this.querySelector('main') ?? this)
+      .use(async(ctx, next) => {
+        if (ctx.path === '/login') {
+          return next();
+        }
+
+        const info = await this.authService.getLoginInfo();
+        if (info) {
+          return next();
+        }
+
+        this.router.push('/login');
+      })
+      .route('/', component('x-home', () => import('./fake/pages/Home.js')))
+      .route('/login', component('x-login', () => import('./auth/pages/Login.js')))
     ;
 
     await this.router.start();
@@ -24,22 +45,40 @@ export class App extends LitElement {
     document.body.removeAttribute('unresolved');
   }
 
-  protected render(): unknown {
+  protected render() {
     return html`
-      <div class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <nav class="border-end p-3 d-flex flex-column flex-shrink-0">
+        <a href="/" class="nav-link">Lit Arch</a>
+        <hr>
+        <ul class="nav nav-pills flex-column">
           <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
+            <a class="nav-link" href="#">Menu 1</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Menu 2</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Menu 3</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled">Menu 4</a>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" @click="${this.logoutClicked}">Logout</button>
           </li>
         </ul>
-        </div>
-      </div>
-      <div class="main" ${ref(this.outletRef)}></div>
+      </nav>
+      <main></main>
     `;
+  }
+
+  async logoutClicked(evt: Event) {
+    evt.preventDefault();
+    await this.authService.logout();
+    await this.router.push('/login');
   }
 
   protected createRenderRoot(): Element | ShadowRoot {

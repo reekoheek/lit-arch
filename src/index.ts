@@ -1,6 +1,6 @@
-import { bootstrapStyles } from './styles.js';
+import { commonStyles } from './styles.js';
 export * from './App.js';
 
-if (bootstrapStyles.styleSheet) {
-  document.adoptedStyleSheets.push(bootstrapStyles.styleSheet);
+if (commonStyles.styleSheet) {
+  document.adoptedStyleSheets.push(commonStyles.styleSheet);
 }
