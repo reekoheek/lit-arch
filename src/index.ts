@@ -1,6 +1,8 @@
-import { commonStyles } from './styles.js';
+import { commonStyles } from './shared/styles.js';
 export * from './App.js';
 
-if (commonStyles.styleSheet) {
-  document.adoptedStyleSheets.push(commonStyles.styleSheet);
-}
+commonStyles.forEach((style) => {
+  if (style.styleSheet) {
+    document.adoptedStyleSheets.push(style.styleSheet);
+  }
+});

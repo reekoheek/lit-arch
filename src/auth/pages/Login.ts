@@ -1,12 +1,13 @@
-import { Form } from '@xlit/form';
+import { Form } from '../../shared/Form.js';
 import { StringType } from '@xlit/form/types/StringType.js';
-import { LitElement, html, css } from 'lit';
-import { classMap } from 'lit/directives/class-map.js';
-import { customElement } from 'lit/decorators.js';
-import { commonStyles } from '../../styles.js';
+import { PageElement, html, css } from '../../shared/PageElement.js';
+import { customElement, state } from 'lit/decorators.js';
 import { Router } from '@xlit/router';
 import { container } from '../../container.js';
 import { AuthService } from '../AuthService.js';
+
+import '../../shared/components/Input.js';
+import '../../shared/components/Alert.js';
 
 interface LoginForm {
   username: string;
@@ -15,9 +16,9 @@ interface LoginForm {
 
 @customElement('x-login')
 @container.injectable()
-export class Login extends LitElement {
+export class Login extends PageElement {
   static styles = [
-    commonStyles,
+    ...PageElement.styles,
     css`
       .bg {
         top: 0;
@@ -57,14 +58,23 @@ export class Login extends LitElement {
   @container.injectLookup()
   authService!: AuthService;
 
+  @state()
+  globalError = '';
+
   form = new Form<LoginForm>({
     username: new StringType().required(),
     password: new StringType().required(),
   }, this);
 
   onSubmit = async(model: LoginForm) => {
-    await this.authService.login(model.username, model.password);
-    await this.router.push('/');
+    try {
+      await this.authService.login(model.username, model.password);
+      await this.router.push('/');
+    } catch (err) {
+      if (err instanceof Error) {
+        this.globalError = err.message;
+      }
+    }
   };
 
   protected render() {
@@ -75,29 +85,21 @@ export class Login extends LitElement {
           <div class="card-body">
             <p class="text-center">Welcome to Lit Arch</p>
             <p class="text-center small">username: admin password: password</p>
+
             <form @submit="${this.form.handleSubmit(this.onSubmit)}" novalidate>
-              <div class="mb-3">
-                <label class="form-label" for="inputUsername">Username</label>
-                <input type="text" id="inputUsername"
-                  class="${classMap({ 'form-control': true, 'is-invalid': this.form.errors.username })}"
-                  .value="${this.form.model.username ?? ''}"
-                  @input="${this.form.handleInput('username')}"
-                  placeholder="Input username">
-              </div>
-              <div class="mb-3">
-                <label class="form-label" for="inputPassword">Password</label>
-                <input type="password" id="inputPassword"
-                  class="${classMap({ 'form-control': true, 'is-invalid': this.form.errors.password })}"
-                  .value="${this.form.model.password ?? ''}"
-                  @input="${this.form.handleInput('password')}"
-                  placeholder="Input password">
-              </div>
-              <div class="clearfix">
-                <div class="form-check float-end">
-                  <input type="checkbox" id="rememberMeCheck">
-                  <label for="rememberMeCheck">Remember me</label>
+              <x-alert .message="${this.globalError}"></x-alert>
+
+              <x-input type="text" label="Username" ${this.form.field('username')}></x-input>
+
+              <x-input type="password" label="Password" ${this.form.field('password')}></x-input>
+
+              <div class="clearfix mb-3">
+                <div class="form-check">
+                  <input type="checkbox" id="rememberMeCheck" class="form-check-input">
+                  <label for="rememberMeCheck" class="form-check-label">Remember me</label>
                 </div>
               </div>
+
               <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Login</button>
               </div>

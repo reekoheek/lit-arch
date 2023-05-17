@@ -13,11 +13,17 @@ dependencies:
   bootstrap:
     specifier: ^5.2.3
     version: 5.2.3(@popperjs/core@2.11.7)
+  bootstrap-icons:
+    specifier: ^1.10.5
+    version: 1.10.5
   lit:
     specifier: ^2.7.4
     version: 2.7.4
 
 devDependencies:
+  '@faker-js/faker':
+    specifier: ^8.0.1
+    version: 8.0.1
   '@fullhuman/postcss-purgecss':
     specifier: ^5.0.0
     version: 5.0.0(postcss@8.4.23)
@@ -644,6 +650,11 @@ packages:
     resolution: {integrity: sha512-26SKdM4uvDWlY8/OOOxSB1AqQWeBosCX3wRYUZO7enTAj03CtVxIiCimYVG2WpULcyV51qapK4qTovwkUr5Mlw==}
     dependencies:
       '@types/chai': 4.3.5
+    dev: true
+
+  /@faker-js/faker@8.0.1:
+    resolution: {integrity: sha512-kbh5MenpTN9U0B4QcOI1NoTPlZHniSYQ3BHbhAnPjJGAmmFqxoxTE4sGdpy7ZOO9038DPGCuhXyMkjOr05uVwA==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
     dev: true
 
   /@fullhuman/postcss-purgecss@5.0.0(postcss@8.4.23):
@@ -1726,6 +1737,10 @@ packages:
   /boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
     dev: true
+
+  /bootstrap-icons@1.10.5:
+    resolution: {integrity: sha512-oSX26F37V7QV7NCE53PPEL45d7EGXmBgHG3pDpZvcRaKVzWMqIRL9wcqJUyEha1esFtM3NJzvmxFXDxjJYD0jQ==}
+    dev: false
 
   /bootstrap@5.2.3(@popperjs/core@2.11.7):
     resolution: {integrity: sha512-cEKPM+fwb3cT8NzQZYEu4HilJ3anCrWqh3CHAok1p9jXqMPsPTBhU25fBckEJHJ/p+tTxTFTsFQGM+gaHpi3QQ==}

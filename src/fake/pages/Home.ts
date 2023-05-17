@@ -1,14 +1,11 @@
-import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { commonStyles } from '../../styles.js';
+import { PageElement, html } from '../../shared/PageElement.js';
 
 @customElement('x-home')
-export class Home extends LitElement {
-  static styles = [commonStyles];
-
+export class Home extends PageElement {
   protected render() {
     return html`
-      <div class="container pt-3">
+      <div class="container-fluid pt-3">
         <h4> Home </h4>
         <p class="small">
           Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugiat harum voluptatum nam voluptates deserunt

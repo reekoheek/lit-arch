@@ -1,19 +1,14 @@
-import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { Router, component } from '@xlit/router';
 import { container, injected } from './container.js';
-import { commonStyles } from './styles.js';
 import { AuthService } from './auth/AuthService.js';
+import { LiteElement, html } from './shared/LiteElement.js';
 
 import './app.css';
 
 @customElement('x-app')
 @container.injectable()
-export class App extends LitElement {
-  static styles = [
-    commonStyles,
-  ];
-
+export class App extends LiteElement {
   @container.injectProvide()
   router!: Router;
 
@@ -37,6 +32,8 @@ export class App extends LitElement {
         this.router.push('/login');
       })
       .route('/', component('x-home', () => import('./fake/pages/Home.js')))
+      .route('/list', component('x-list', () => import('./fake/pages/List.js')))
+      .route('/form', component('x-form', () => import('./fake/pages/Form.js')))
       .route('/login', component('x-login', () => import('./auth/pages/Login.js')))
     ;
 
@@ -52,7 +49,13 @@ export class App extends LitElement {
         <hr>
         <ul class="nav nav-pills flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/list">Table List</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/form">Data Form</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Menu 1</a>
@@ -79,9 +82,5 @@ export class App extends LitElement {
     evt.preventDefault();
     await this.authService.logout();
     await this.router.push('/login');
-  }
-
-  protected createRenderRoot(): Element | ShadowRoot {
-    return this;
   }
 }
