@@ -1,22 +1,41 @@
 import { customElement } from 'lit/decorators.js';
 import { Router, component } from '@xlit/router';
-import { container, injected } from './container.js';
+import { container, inject, injected, lookup, provide } from './container.js';
 import { AuthService } from './auth/AuthService.js';
 import { LiteElement, html } from './shared/LiteElement.js';
-
-import './app.css';
+import { Meta } from './shared/lib/Meta.js';
+import type { Menu, SideMenu } from './shared/components/SideMenu.js';
+import './shared/components/SideMenu.js';
+import './shared/components/ThemeSwitcher.js';
 
 @customElement('x-app')
-@container.injectable()
+@inject(container)
 export class App extends LiteElement {
-  @container.injectProvide()
+  @provide()
   router!: Router;
 
-  @container.injectLookup()
+  @lookup()
   authService!: AuthService;
+
+  @lookup()
+  meta!: Meta;
+
+  sideMenu!: SideMenu;
+
+  menus: Menu[] = [
+    { id: 'home', label: '<i class="bi bi-house me-2"></i> Home', href: '/' },
+    { id: 'list', label: '<i class="bi bi-table me-2"></i> List', href: '/list' },
+    { id: 'form', label: '<i class="bi bi-window me-2"></i> Form', href: '/form' },
+    { id: 'menu#1', label: '<i class="bi bi-1-circle me-2"></i> Menu 1' },
+    { id: 'menu#2', label: '<i class="bi bi-1-circle me-2"></i> Menu 2' },
+    { id: 'menu#3', label: '<i class="bi bi-1-circle me-2"></i> Menu 3' },
+    { id: 'logout', label: '<i class="bi bi-door-closed me-2"></i> Logout', onClick: this.loggedOut.bind(this) },
+  ];
 
   protected async firstUpdated() {
     await injected(this);
+
+    this.sideMenu = this.$('x-side-menu') as SideMenu;
 
     this.router = new Router(this.querySelector('main') ?? this)
       .use(async(ctx, next) => {
@@ -31,6 +50,13 @@ export class App extends LiteElement {
 
         this.router.push('/login');
       })
+      .use((ctx, next) => {
+        const index = this.menus.findIndex((menu) => menu.href === ctx.path);
+        if (index !== -1) {
+          this.sideMenu.setActive(index);
+        }
+        return next();
+      })
       .route('/', component('x-home', () => import('./fake/pages/Home.js')))
       .route('/list', component('x-list', () => import('./fake/pages/List.js')))
       .route('/form', component('x-form', () => import('./fake/pages/Form.js')))
@@ -44,42 +70,24 @@ export class App extends LiteElement {
 
   protected render() {
     return html`
-      <nav class="border-end p-3 d-flex flex-column flex-shrink-0">
-        <a href="/" class="nav-link">Lit Arch</a>
-        <hr>
-        <ul class="nav nav-pills flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/list">Table List</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/form">Data Form</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Menu 1</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Menu 2</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Menu 3</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled">Menu 4</a>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" @click="${this.logoutClicked}">Logout</button>
-          </li>
-        </ul>
-      </nav>
+      <style>
+        x-app x-side-menu {
+          position: fixed;
+          width: 15rem;
+          height: 100vh;
+        }
+
+        x-app  main {
+          margin-left: 15rem;
+          height: 100vh;
+        }
+      </style>
+      <x-side-menu title="${this.meta.get('application-name')}" .menus="${this.menus}"></x-side-menu>
       <main></main>
     `;
   }
 
-  async logoutClicked(evt: Event) {
-    evt.preventDefault();
+  async loggedOut() {
     await this.authService.logout();
     await this.router.push('/login');
   }

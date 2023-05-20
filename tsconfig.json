@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
     "target": "es2019",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "es2020",
     "declaration": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitAny": true,
-    "skipLibCheck": true
+    "moduleResolution": "nodenext",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["./**/*.test.ts"]

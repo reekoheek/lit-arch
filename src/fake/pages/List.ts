@@ -57,9 +57,9 @@ export class List extends PageElement {
           <table class="table table-striped table-hover mb-0">
             <thead>
               <tr>
-                <th class="sticky-top bg-white" scope="col"> Name </th>
-                <th class="sticky-top bg-white" scope="col"> Username </th>
-                <th class="sticky-top bg-white" scope="col"> Email </th>
+                <th class="sticky-top bg-light-subtle" scope="col"> Name </th>
+                <th class="sticky-top bg-light-subtle" scope="col"> Username </th>
+                <th class="sticky-top bg-light-subtle" scope="col"> Email </th>
               </tr>
             </thead>
             <tbody>

@@ -1,21 +1,21 @@
-import { Form } from '../../shared/Form.js';
 import { StringType } from '@xlit/form/types/StringType.js';
 import { PageElement, html, css } from '../../shared/PageElement.js';
 import { customElement, state } from 'lit/decorators.js';
 import { Router } from '@xlit/router';
-import { container } from '../../container.js';
 import { AuthService } from '../AuthService.js';
-
 import '../../shared/components/Input.js';
 import '../../shared/components/Alert.js';
+import { Meta } from '../../shared/lib/Meta.js';
+import { container, inject, lookup } from '../../container.js';
+import { FormController } from '@xlit/form';
 
-interface LoginForm {
+interface Model {
   username: string;
   password: string;
 }
 
 @customElement('x-login')
-@container.injectable()
+@inject(container)
 export class Login extends PageElement {
   static styles = [
     ...PageElement.styles,
@@ -26,10 +26,18 @@ export class Login extends PageElement {
         left: 0;
         right: 0;
         position: absolute;
+      }
+
+      .bg-img {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        opacity: 0.6;
         background-image: url(https://c0.wallpaperflare.com/preview/1015/348/857/blue-wall-background-cobalt.jpg);
         background-position: center center;
         background-repeat: no-repeat;
-        background-color: #1076ca;
         background-size: cover;
       }
 
@@ -52,21 +60,24 @@ export class Login extends PageElement {
     `,
   ];
 
-  @container.injectLookup()
+  @lookup()
   router!: Router;
 
-  @container.injectLookup()
+  @lookup()
+  meta!: Meta;
+
+  @lookup()
   authService!: AuthService;
 
   @state()
   globalError = '';
 
-  form = new Form<LoginForm>({
+  form = new FormController<Model>(this, {
     username: new StringType().required(),
     password: new StringType().required(),
-  }, this);
+  });
 
-  onSubmit = async(model: LoginForm) => {
+  onSubmit = async(model: Model) => {
     try {
       await this.authService.login(model.username, model.password);
       await this.router.push('/');
@@ -79,18 +90,19 @@ export class Login extends PageElement {
 
   protected render() {
     return html`
-      <div class="bg"></div>
+      <div class="bg bg-body"></div>
+      <div class="bg-img"></div>
       <div class="viewport">
         <div class="card">
           <div class="card-body">
-            <p class="text-center">Welcome to Lit Arch</p>
+            <h4 hidden>Login</h4>
+            <p class="text-center">Welcome to ${this.meta.get('application-name')}</p>
             <p class="text-center small">username: admin password: password</p>
 
             <form @submit="${this.form.handleSubmit(this.onSubmit)}" novalidate>
               <x-alert .message="${this.globalError}"></x-alert>
 
               <x-input type="text" label="Username" ${this.form.field('username')}></x-input>
-
               <x-input type="password" label="Password" ${this.form.field('password')}></x-input>
 
               <div class="clearfix mb-3">

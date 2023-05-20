@@ -11,7 +11,7 @@ type Type = 'text' | 'search' | 'tel' | 'url' | 'email' | 'password' | 'datetime
 
 @customElement('x-input')
 export class Input extends LiteElement {
-  uniqueId = `input${nextId++}`;
+  private uniqueId = `input${nextId++}`;
 
   @property()
   type: Type = 'text';

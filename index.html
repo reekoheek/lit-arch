@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lit Arch</title>
+  <meta name="application-name" content="Lit Arch">
+  <meta name="description" content="Great application">
+  <title>...</title>
 
   <style>
     body {
@@ -53,10 +55,18 @@
 <body unresolved>
   <div id="splashCover">
     <div class="splash-cover__block">
-      <h1>Lit Arch</h1>
-      <h3>Great Application</h3>
+      <h1></h1>
+      <h3></h3>
     </div>
   </div>
+
+  <script type="text/javascript">
+    const name = document.querySelector('meta[name=application-name]')?.content ?? 'Lit Arch';
+    const description = document.querySelector('meta[name=description]')?.content ?? 'Great Application';
+    document.title = name;
+    document.querySelector('#splashCover h1').textContent = name;
+    document.querySelector('#splashCover h3').textContent = description;
+  </script>
 
   <x-app></x-app>
   <script type="module" src="./src/index.ts"></script>

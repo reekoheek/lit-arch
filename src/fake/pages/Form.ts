@@ -1,10 +1,9 @@
 import { PageElement, html } from '../../shared/PageElement.js';
 import { customElement, state } from 'lit/decorators.js';
-import { Form } from '../../shared/Form.js';
 import { StringType } from '@xlit/form/types/StringType.js';
-
 import '../../shared/components/Input.js';
 import '../../shared/components/Alert.js';
+import { FormController } from '@xlit/form';
 
 interface Model {
   name: string;
@@ -14,11 +13,11 @@ interface Model {
 
 @customElement('x-form')
 export class XForm extends PageElement {
-  private form = new Form<Model>({
+  private form = new FormController<Model>(this, {
     name: new StringType().required(),
     email: new StringType().required(),
     password: new StringType().required(),
-  }, this);
+  });
 
   @state()
   globalError = '';

@@ -10,6 +10,6 @@ export default {
     // '@fullhuman/postcss-purgecss': {
     //   content: ['./index.html', './src/**/*.ts'],
     // },
-    // cssnano: {},
+    cssnano: {},
   },
 };

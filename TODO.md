@@ -1,4 +1,3 @@
 # TODO
 
-- [ ] side menu select active on url change
-- [ ] title change on url change
+- [ ] @xlit/router context can put and get state
