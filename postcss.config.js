@@ -7,9 +7,9 @@ export default {
         'nesting-rules': true,
       },
     },
-    // '@fullhuman/postcss-purgecss': {
-    //   content: ['./index.html', './src/**/*.ts'],
-    // },
+    '@fullhuman/postcss-purgecss': {
+      content: ['./index.html', './src/**/*.ts'],
+    },
     cssnano: {},
   },
 };

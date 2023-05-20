@@ -27,7 +27,7 @@ export class ThemeSwitcher extends BaseElement {
   protected render(): unknown {
     return html`
       <a href="#" class="nav-link" @click="${this.toggleClicked}" title="Change to ${this.targetTheme} mode">
-        <i class="bi bi-${this.actualTheme === 'light' ? 'moon' : 'sun'}-fill"></i>
+        <i class="bi ${this.actualTheme === 'light' ? 'bi-moon-fill' : 'bi-sun-fill'}"></i>
       </a>
     `;
   }
